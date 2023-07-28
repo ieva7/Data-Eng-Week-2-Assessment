@@ -1,15 +1,24 @@
-# [TODO]: step 1
-# Update the is_log_line function below to skip lines that are not valid log lines.
-# Valid log lines have a timestamp, error type, and message. For example, lines 1, 3,
-# 7 and 37 are all examples of lines (from sample.log) that would be filtered out.
-# There's no perfect way to do this: just decide what you think is reasonable to get
-# the test to pass. The only thing you are not allowed to do is filter out log lines
-# based on the exact row numbers you want to remove.
+from datetime import datetime
+
+
 def is_log_line(line):
     """Takes a log line and returns True if it is a valid log line and returns nothing
     if it is not.
     """
-    return True
+    try:
+        segments = line.split(' ')
+        date = segments.pop(0) + " " + segments.pop(0)
+        date = datetime.strptime(date, "%m/%d/%y %H:%M:%S")
+
+        if isinstance(segments[0], str) and segments.pop(0) in \
+            ["INFO", "TRACE", "WARNING"]:
+                segments = ' '.join(segments).strip()
+                if segments[0] == ":":
+                    return True
+    except:
+        return None
+
+    return None
 
 
 # [TODO]: step 2
@@ -21,7 +30,16 @@ def get_dict(line):
     """Takes a log line and returns a dict with
     `timestamp`, `log_level`, `message` keys
     """
-    pass
+    try:
+        segments = line.split(' ')
+        timestamp = segments.pop(0) + " " + segments.pop(0)
+        log_level = segments.pop(0)
+
+        return {"timestamp": timestamp, "log_level": log_level, "message":\
+            ' '.join(segments).strip()}
+    except Exception:
+        return None
+
 
 
 # YOU DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE
@@ -43,7 +61,7 @@ if __name__ == "__main__":
     # ---- OUTPUT --- #
     # You can print out each line of the log file line by line
     # by uncommenting this code below
-    # for i, line in enumerate(log_parser("sample.log")):
+    # for i, line in enumerate(log_parser_step_1("sample.log")):
     #     print(i, line)
 
     # ---- TESTS ---- #
