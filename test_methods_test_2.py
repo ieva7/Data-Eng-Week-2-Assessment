@@ -1,7 +1,7 @@
 # pylint: skip-file
 
 from methods_test_2 import read_csv, get_court_by_postcode, filter_courts_by_desired_type, \
-find_closest_court
+find_closest_court, add_court_information_to_person
 import pytest
 import requests_mock
 import json
@@ -113,6 +113,7 @@ def test_find_closest_court_empty_courts():
 
     assert e.value.args[0] == "Courts list is empty."
 
+
 def test_find_closest_court_valid_input(mock_court):
     """Valid input produces expected outcome."""
 
@@ -120,4 +121,42 @@ def test_find_closest_court_valid_input(mock_court):
 
     assert isinstance(court, dict)
     assert court["name"] == "Earls Court"
+
+
+
+# Testing: add_court_information_to_person()
+
+def test_add_court_information_to_person_invalid_person_type():
+    """A non-dict of person input raises TypeError"""
+    with pytest.raises(TypeError) as e:
+        add_court_information_to_person(3222222, {"name": "Earls court"})
+
+    assert e.value.args[0] == "Invalid type of person data provided."
+
+
+def test_add_court_information_to_person_invalid_court_type():
+    """A non-dict of court input raises TypeError"""
+    with pytest.raises(TypeError) as e:
+        add_court_information_to_person({"name": "Earl"}, 3496758945)
+
+    assert e.value.args[0] == "Invalid type of court provided."
+
+
+def test_add_court_information_to_person_invalid_court_information(mock_person):
+    """Missing field from court with produce KeyError"""
+
+    with pytest.raises(KeyError) as e:
+        add_court_information_to_person(mock_person, {"name": "Earls court"})
+
+    assert e.value.args[0] == "Missing information from courts."
+
+
+def test_add_court_information_to_person_vaild_input(mock_court, mock_person):
+    """Valid input yields expected results"""
+
+    desired_court = json.loads(mock_court)[2]
+    add_court_information_to_person(mock_person, desired_court)
+
+    assert len(mock_person.keys()) == 6
+    assert mock_person["dx_number"] == "135 Liars Lane"
 

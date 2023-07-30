@@ -88,15 +88,20 @@ def add_court_information_to_person(person: dict, court: dict) -> None:
     if not isinstance(person, dict):
         raise TypeError("Invalid type of person data provided.")
 
-    person["nearest_court"] = court["name"]
-    person["distance_to_court"] = court["distance"]
+    try:
+        person["nearest_court"] = court["name"]
+        person["distance_to_court"] = str(court["distance"])
 
-    dx_number = court["dx_number"]
-    if dx_number == None:
-        dx_number = "Please refer to website"
-    person["dx_number"] = dx_number
+        dx_number = court["dx_number"]
+        if dx_number == None:
+            dx_number = "Please refer to website"
+        person["dx_number"] = dx_number
+    except KeyError:
+        raise KeyError("Missing information from courts.")
+    except Exception as e:
+        raise Exception(e)
 
-
+#TEST
 # Can be easily amended to display an individual's table of closest multiple courts
 def render_table(people: list[dict]) -> Table:
     """Returns a rich.Table table with person's name, type of court desired, home postcode, nearest
@@ -111,7 +116,9 @@ def render_table(people: list[dict]) -> Table:
     information_table.add_column("Distance to court", justify="right", style="deep_pink2")
 
     for person in people:
-        information_table.add_row(person["name"], person["home_postcode"], person["looking_for_court_type",\
-        person["nearest_court"], person["dx_number"], person["distance_to_court"]])
+        print("adding")
+        information_table.add_row(person["person_name"], person["home_postcode"], person["looking_for_court_type"],\
+        person["nearest_court"], person["dx_number"], person["distance_to_court"])
+
     console = Console(record=True)
     console.print(information_table)

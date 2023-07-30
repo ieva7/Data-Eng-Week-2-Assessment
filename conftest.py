@@ -12,8 +12,8 @@ def mock_person():
 def mock_court():
     """Returns fake court data"""
     return '''[{"name": "Earls Court", "types": ["Family Court"], "dx_number": "113 Liars Lane",
-    "distance": "1"}, {"name": "Greys Court", "types": ["Family Court", "Tribunal"], "dx_number":
-    "118 Liars Lane", "distance": "1"}, {"name": "Malfoys Court", "types": ["Tribunal"], "dx_number":
+    "distance": "1"}, {"name": "Greys Court", "types": ["Family Court", "Tribunal Court"], "dx_number":
+    "118 Liars Lane", "distance": "1"}, {"name": "Malfoys Court", "types": ["Tribunal Court", "Crown Court"], "dx_number":
     "135 Liars Lane", "distance": "1.9"}, {"name": "Unfiled Court", "types": [], "dx_number":
     "200 Liars Lane", "distance": "2.5"}]'''
 
