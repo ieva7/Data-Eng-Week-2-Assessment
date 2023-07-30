@@ -1,51 +1,11 @@
-from datetime import datetime
+#pylint: skip-file
+"""Tests functions' ability to filter out invalid log lines and return them as dicts
+Main file.
+Pylint disabled due to requirement of no modification of the code below"""
+from methods_test_1 import is_log_line, get_dict
 
+if __name__ == "__main__": # pragma: no cover
 
-def is_log_line(line):
-    """Takes a log line and returns True if it is a valid log line and returns nothing
-    if it is not.
-    """
-    try:
-        segments = line.split(' ')
-        date = segments.pop(0) + " " + segments.pop(0)
-        date = datetime.strptime(date, "%m/%d/%y %H:%M:%S")
-
-        if isinstance(segments[0], str) and segments.pop(0) in \
-            ["INFO", "TRACE", "WARNING"]:
-                segments = ' '.join(segments).strip()
-                if segments[0] == ":":
-                    return True
-    except:
-        return None
-
-    return None
-
-
-# [TODO]: step 2
-# Update the get_dict function below so it converts a line of the logs into a
-# dictionary with keys for "timestamp", "log_level", and "message". The valid log
-# levels are `INFO`, `TRACE`, and `WARNING`. See lines 67 to 71 for how we expect the
-# results to look.
-def get_dict(line):
-    """Takes a log line and returns a dict with
-    `timestamp`, `log_level`, `message` keys
-    """
-    try:
-        segments = line.split(' ')
-        timestamp = segments.pop(0) + " " + segments.pop(0)
-        log_level = segments.pop(0)
-
-        return {"timestamp": timestamp, "log_level": log_level, "message":\
-            ' '.join(segments).strip()}
-    except Exception:
-        return None
-
-
-
-# YOU DON'T NEED TO CHANGE ANYTHING BELOW THIS LINE
-if __name__ == "__main__":
-    # these are basic generators that will return
-    # 1 line of the log file at a time
     def log_parser_step_1(log_file):
         f = open(log_file)
         for line in f:
@@ -58,14 +18,6 @@ if __name__ == "__main__":
             if is_log_line(line):
                 yield get_dict(line)
 
-    # ---- OUTPUT --- #
-    # You can print out each line of the log file line by line
-    # by uncommenting this code below
-    # for i, line in enumerate(log_parser_step_1("sample.log")):
-    #     print(i, line)
-
-    # ---- TESTS ---- #
-    # DO NOT CHANGE
 
     def test_step_1():
         with open("tests/step1.log") as f:
@@ -109,3 +61,4 @@ if __name__ == "__main__":
         test_step_2()
     except Exception:
         print("step 2 test unable to run")
+
