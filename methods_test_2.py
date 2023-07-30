@@ -1,7 +1,6 @@
 """Method file for test_2.py"""
 import csv
 import requests
-from rich.prompt import Prompt
 from rich.console import Console
 from rich.table import Table
 
@@ -16,12 +15,12 @@ def read_csv(file_path: str) -> list[dict]:
             next(file_reader)
             for row in file_reader:
                 row = row[0].split(",")
-                lines.append({"person_name": row[0], "home_postcode": row[1], "looking_for_court_type"\
-                        : row[2]})
-    except FileNotFoundError as e:
-        raise FileNotFoundError(e)
-    except StopIteration:
-        raise StopIteration("File is empty.")
+                lines.append({"person_name": row[0], "home_postcode": row[1], \
+                "looking_for_court_type": row[2]})
+    except FileNotFoundError as error:
+        raise FileNotFoundError(error) from error
+    except StopIteration as exc:
+        raise StopIteration("File is empty.") from exc
     return lines
 
 
@@ -32,10 +31,11 @@ def get_court_by_postcode(home_postcode: str) -> list[dict] | None:
     if not isinstance(home_postcode, str):
         raise TypeError("Postcode is not valid format.")
 
-    courts = requests.get(f"https://courttribunalfinder.service.gov.uk/search/results.json?postcode={home_postcode}")
+    courts = requests.get\
+    (f"https://courttribunalfinder.service.gov.uk/search/results.json?postcode={home_postcode}")
     if courts.status_code == 200:
         return courts.json()
-    elif courts.status_code == 400:
+    if courts.status_code == 400:
         print(f"Invalid postcode: {home_postcode}. Please try again.")
 
     return None
@@ -79,7 +79,6 @@ def find_closest_court(courts: list[dict]) -> dict:
 
 
 # Can be easily amended to add a list of matching courts
-# TEST
 def add_court_information_to_person(person: dict, court: dict) -> None:
     """Adds matching court information to the person's dictionary"""
     if not isinstance(court, dict):
@@ -93,19 +92,25 @@ def add_court_information_to_person(person: dict, court: dict) -> None:
         person["distance_to_court"] = str(court["distance"])
 
         dx_number = court["dx_number"]
-        if dx_number == None:
+        if dx_number is None:
             dx_number = "Please refer to website"
         person["dx_number"] = dx_number
-    except KeyError:
-        raise KeyError("Missing information from courts.")
-    except Exception as e:
-        raise Exception(e)
+    except KeyError as exc:
+        raise KeyError("Missing information from courts.") from exc
+    except Exception as error: # for any other unforseen exceptions
+        raise Exception(error) from error
 
-#TEST
+
 # Can be easily amended to display an individual's table of closest multiple courts
-def render_table(people: list[dict]) -> Table:
+def render_table(people: list[dict], console: Console) -> Console:
     """Returns a rich.Table table with person's name, type of court desired, home postcode, nearest
     court of the right type, dx_number, and the distance to the nearest court as headers only."""
+
+    if not isinstance(people, list):
+        raise TypeError("Invalid type of people data provided.")
+
+    if not isinstance(console, Console):
+        raise TypeError("Invalid type of console provided.")
 
     information_table = Table(title="Information about the nearest courts")
     information_table.add_column("Name", justify="right", style="cyan", no_wrap=True)
@@ -115,10 +120,16 @@ def render_table(people: list[dict]) -> Table:
     information_table.add_column("Dx number", justify="right", style="yellow")
     information_table.add_column("Distance to court", justify="right", style="deep_pink2")
 
-    for person in people:
-        print("adding")
-        information_table.add_row(person["person_name"], person["home_postcode"], person["looking_for_court_type"],\
-        person["nearest_court"], person["dx_number"], person["distance_to_court"])
+    try:
+        for person in people:
+            information_table.add_row(person["person_name"], person["home_postcode"], \
+            person["looking_for_court_type"], person["nearest_court"], person["dx_number"], \
+            person["distance_to_court"])
+    except KeyError:
+        raise KeyError("Key invalid. Please check your data source.")
+    except Exception as exc: # for any other unforseen exceptions
+        raise Exception(exc) from exc
 
-    console = Console(record=True)
     console.print(information_table)
+
+    return console
