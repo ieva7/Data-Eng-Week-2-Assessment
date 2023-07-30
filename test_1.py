@@ -1,7 +1,7 @@
 #pylint: skip-file
-"""Tests functions' ability to filter out invalid log lines and return them as dicts
-Main file.
-Pylint disabled due to requirement of no modification of the code below"""
+"""Main file.
+Tests functions' ability to filter out invalid log lines and return them as dicts.
+Pylint disabled due to requirement of no modification of the code below."""
 from methods_test_1 import is_log_line, get_dict
 
 if __name__ == "__main__": # pragma: no cover

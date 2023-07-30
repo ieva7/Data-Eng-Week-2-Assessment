@@ -12,6 +12,7 @@ def is_log_line(line: str) -> bool | None:
         date = segments.pop(0) + " " + segments.pop(0)
         date = datetime.strptime(date, "%m/%d/%y %H:%M:%S")
 
+# Checking for 'valid' log levels from TODO: step 2 in is_log_line() to preserve modularity
         if isinstance(segments[0], str) and segments.pop(0) in \
             ["INFO", "TRACE", "WARNING"]:
             segments = " ".join(segments).strip()
