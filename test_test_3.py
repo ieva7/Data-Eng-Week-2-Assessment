@@ -1,8 +1,6 @@
 """Test file for test_3.py"""
-
 import pytest
 from test_3 import sum_current_time
-
 
 
 def test_sum_current_time_invalid_input_type():

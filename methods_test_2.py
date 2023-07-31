@@ -5,6 +5,8 @@ from rich.console import Console
 from rich.table import Table
 
 
+API_URL = "https://courttribunalfinder.service.gov.uk/search/results.json?postcode="
+
 def read_csv(file_path: str) -> list[dict]:
     """Reads a .csv file and returns a list[dict] excluding the header"""
 
@@ -31,8 +33,7 @@ def get_court_by_postcode(home_postcode: str) -> list[dict] | None:
     if not isinstance(home_postcode, str):
         raise TypeError("Postcode is not valid format.")
 
-    courts = requests.get\
-    (f"https://courttribunalfinder.service.gov.uk/search/results.json?postcode={home_postcode}")
+    courts = requests.get(API_URL + home_postcode)
     if courts.status_code == 200:
         return courts.json()
     if courts.status_code == 400:

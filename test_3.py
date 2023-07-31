@@ -1,7 +1,9 @@
 """Main file for test_3. """
 
+
 def sum_current_time(time_str: str) -> int:
-    """Expects data in the format HH:MM:SS"""
+    """Expects data in the format HH:MM:SS.
+    Converts given time to numbers and returns their sum"""
 
     if not isinstance(time_str, str):
         raise TypeError(f"Incorrect type of input provided, {type(time_str)} not allowed.")

@@ -4,6 +4,7 @@ Tests functions' ability to filter out invalid log lines and return them as dict
 Pylint disabled due to requirement of no modification of the code below."""
 from methods_test_1 import is_log_line, get_dict
 
+
 if __name__ == "__main__": # pragma: no cover
 
     def log_parser_step_1(log_file):
@@ -18,6 +19,8 @@ if __name__ == "__main__": # pragma: no cover
             if is_log_line(line):
                 yield get_dict(line)
 
+    # ---- TESTS ---- #
+    # DO NOT CHANGE
 
     def test_step_1():
         with open("tests/step1.log") as f:
@@ -61,4 +64,5 @@ if __name__ == "__main__": # pragma: no cover
         test_step_2()
     except Exception:
         print("step 2 test unable to run")
+
 
