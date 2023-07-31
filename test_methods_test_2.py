@@ -1,4 +1,3 @@
-# pylint: skip-file
 """Test file for methods_test_2.py"""
 from io import StringIO
 import json
